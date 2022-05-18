@@ -3,6 +3,7 @@ import socket
 import pickle
 import Algorithms
 import utils
+import random
 
 #setup socket
 HeaderSize = 10
@@ -16,28 +17,49 @@ mode = input("Enter Your Choice: ")
 while(mode != "1" and mode != "2"):
     print("Invalid Choice!")
     mode = input("Enter Your Choice: ")
-
 #setup algorithm
+primeArray = utils.read_data('primes.txt')
 if(mode == "1"):
-    primeArray = utils.read_data('primes.txt')
     (p,q) = Algorithms.generate_two_prime_numbers(primeArray)
     (e,d,n) = Algorithms.RSA_key_generator(p,q)
 else:
     p = int(input("Enter p: "))
     while(utils.isPrime(p) == False):
         print("P must be PRIME!")
-        p = int(input("Enter p: "))
-    q = int(input("Enter q: "))
-    while(utils.isPrime(q) == False or p*q < 256):
-        print("q must be PRIME and p*q must be greater than 255!")
+        p = int(input("Enter p: ")) 
+    print("want to insert q y/n")
+    choice = input("Enter Your Choice: ")
+    while(choice != "y" and choice != "n"):
+        print("Invalid Choice ! ")
+        choice = input("Enter Your Choice: ")
+    if(choice == "y"):    
         q = int(input("Enter q: "))
+        while(utils.isPrime(q) == False or p*q < 256):
+            print("q must be PRIME and p*q must be greater than 255!")
+            q = int(input("Enter q: "))
+    else:
+        q = random.choice(primeArray)
+        while(p*q <255):
+            q = random.choice(primeArray)
+        print("generated q :" , q)    
     n = p*q    
-    e = int(input("Enter e: "))
-    while(utils.GCD(e,(p-1)*(q-1)) != 1 or e < 1 or e > (p-1)*(q-1)):
-        print("e must be greater than 1 ,smaller than (p-1)*(q-1) ,and coprime to (p-1)*(q-1)!")
+    print("want to insert e y/n")
+    choice = input("Enter Your Choice: ")
+    while(choice != "y" and choice != "n"):
+        print("Invalid Choice ! ")
+        choice = input("Enter Your Choice: ")
+    if(choice == "y"):
         e = int(input("Enter e: "))
+        while(utils.GCD(e,(p-1)*(q-1)) != 1 or e <= 1 or e >= (p-1)*(q-1)):
+            print("e must be greater than 1 ,smaller than (p-1)*(q-1) ,and coprime to (p-1)*(q-1)!")
+            e = int(input("Enter e: "))
+    else:
+        phi = (p-1)*(q-1)
+        e = random.randint(2, phi-1)  # choose e randomly from 1 to phi
+        while utils.GCD(e, phi) != 1:
+            e = random.randint(2, phi-1)
+        print("chosen e: ", e)    
     d = utils.InverseModulo(e,(p-1)*(q-1))    
-          
 
 #first send public key to server
 publicKey = (e,n)
