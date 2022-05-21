@@ -31,7 +31,9 @@ while True:
             (e,n) = msg
             pkRecieved = True
 
-    print("Public key recieved :" , e,n)    
+    print("Public key recieved : ..." )    
+    print(f"e = {e} \n\n" )    
+    print(f"n =  {n}  \n\n------------" )    
     while True:
         msg = input("Enter a message: ")
         msg = Algorithms.Encrypt(msg,n,e)

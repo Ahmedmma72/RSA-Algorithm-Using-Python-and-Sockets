@@ -2,7 +2,7 @@ from http import client
 import socket
 import pickle
 import Algorithms
-import utils
+from utils import *
 import random
 
 #setup socket
@@ -18,13 +18,17 @@ while(mode != "1" and mode != "2"):
     print("Invalid Choice!")
     mode = input("Enter Your Choice: ")
 #setup algorithm
-primeArray = utils.read_data('primes.txt')
+primeArray = read_data('primes.txt')
 if(mode == "1"):
-    (p,q) = Algorithms.generate_two_prime_numbers(primeArray)
+    keySize = int(input("Enter Key Size: ")) 
+    while(keySize < 0 ):
+        print('key size cant be negative')
+        keySize = int(input("Enter Key Size: ")) 
+    (p,q) = Algorithms.generate_two_prime_numbers(primeArray, 512)
     (e,d,n) = Algorithms.RSA_key_generator(p,q)
 else:
     p = int(input("Enter p: "))
-    while(utils.isPrime(p) == False):
+    while(isPrime(p) == False):
         print("P must be PRIME!")
         p = int(input("Enter p: ")) 
     print("want to insert q y/n")
@@ -34,7 +38,7 @@ else:
         choice = input("Enter Your Choice: ")
     if(choice == "y"):    
         q = int(input("Enter q: "))
-        while(utils.isPrime(q) == False or p*q < 256):
+        while(isPrime(q) == False or p*q < 256):
             print("q must be PRIME and p*q must be greater than 255!")
             q = int(input("Enter q: "))
     else:
@@ -50,16 +54,16 @@ else:
         choice = input("Enter Your Choice: ")
     if(choice == "y"):
         e = int(input("Enter e: "))
-        while(utils.GCD(e,(p-1)*(q-1)) != 1 or e <= 1 or e >= (p-1)*(q-1)):
+        while(GCD(e,(p-1)*(q-1)) != 1 or e <= 1 or e >= (p-1)*(q-1)):
             print("e must be greater than 1 ,smaller than (p-1)*(q-1) ,and coprime to (p-1)*(q-1)!")
             e = int(input("Enter e: "))
     else:
         phi = (p-1)*(q-1)
         e = random.randint(2, phi-1)  # choose e randomly from 1 to phi
-        while utils.GCD(e, phi) != 1:
+        while GCD(e, phi) != 1:
             e = random.randint(2, phi-1)
         print("chosen e: ", e)    
-    d = utils.InverseModulo(e,(p-1)*(q-1))    
+    d = InverseModulo(e,(p-1)*(q-1))    
 
 #first send public key to server
 publicKey = (e,n)
@@ -81,7 +85,9 @@ while True:
     full_msg += msg
     if len(full_msg)-HeaderSize == msg_len:
         msg = pickle.loads(full_msg[HeaderSize:])
-        msg = Algorithms.Decrypt(msg,n,d)
-        print("recieved message: ",msg)
+        decryptedMsg = Algorithms.Decrypt(msg,n,d)
+        print('\n------------- ')
+        print(rf"decrypted Msg {msg}" , '\n')
+        print(f"recieved message: {decryptedMsg}")
         new_msg = True
         full_msg = b''
