@@ -29,7 +29,10 @@ if(mode == "1"):
         keySize = int(input("Enter Key Size: ")) 
     #(p,q) = generate_two_prime_numbers(512) #just if neccesary unccoment this line
     (p,q) = generate_two_prime_numbers( keySize // 2)
+    print(f"p = {p} \n\n")
+    print(f"q =  {q} \n\n")
     (e,d,n) = Algorithms.RSA_key_generator(p,q)
+    print(f"d =  {d} \n\n------------")
 else:
     p = int(input("Enter p: "))
     while(isPrime(p) == False):
@@ -91,7 +94,7 @@ while True:
         msg = pickle.loads(full_msg[HeaderSize:])
         decryptedMsg = Algorithms.Decrypt(msg,n,d)
         print('\n------------- ')
-        print(rf"decrypted Msg {msg}" , '\n')
+        print(rf"recieved cypher: {msg}", '\n')
         print(f"recieved message: {decryptedMsg}")
         new_msg = True
         full_msg = b''
