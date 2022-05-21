@@ -39,15 +39,9 @@ def RSA_key_generator(p,q):
     return (e,d,n)        
 
 #generate two random integers from the array of prime numbers
-def generate_two_prime_numbers( prime_array , nBits =0 ):
-    if(nBits == 0):
-        p = random.choice(prime_array)
-        q = random.choice(prime_array)
-        while p == q:
-            q = random.choice(prime_array)
-    else :
-        p = getPrime(nBits )
-        q = getPrime(nBits )
-        while p == q:
-            q = random.choice(prime_array)
+def generate_two_prime_numbers(  nBits ):
+    p = getPrime(nBits )
+    q = getPrime(nBits )
+    while p == q:
+        q = getPrime(nBits)
     return (p,q)

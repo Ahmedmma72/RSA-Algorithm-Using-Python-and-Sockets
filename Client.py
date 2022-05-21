@@ -4,6 +4,7 @@ import pickle
 import Algorithms
 from utils import *
 import random
+from Crypto.Util.number import getPrime
 
 #setup socket
 HeaderSize = 10
@@ -18,13 +19,16 @@ while(mode != "1" and mode != "2"):
     print("Invalid Choice!")
     mode = input("Enter Your Choice: ")
 #setup algorithm
-primeArray = read_data('primes.txt')
+# primeArray = read_data('primes.txt')
 if(mode == "1"):
     keySize = int(input("Enter Key Size: ")) 
-    while(keySize < 0 ):
-        print('key size cant be negative')
+    while(True):
+        if(keySize < 0)     : print('key size cant be negative')
+        elif(keySize < 30)  : print('please insert bigger key size')
+        elif(keySize > 1500)  : print('max key size = 1500')
+        else :     break
         keySize = int(input("Enter Key Size: ")) 
-    (p,q) = Algorithms.generate_two_prime_numbers(primeArray, 512)
+    (p,q) = Algorithms.generate_two_prime_numbers( keySize // 2)
     (e,d,n) = Algorithms.RSA_key_generator(p,q)
 else:
     p = int(input("Enter p: "))
@@ -42,9 +46,11 @@ else:
             print("q must be PRIME and p*q must be greater than 255!")
             q = int(input("Enter q: "))
     else:
-        q = random.choice(primeArray)
+        # q = random.choice(primeArray)
+        q = getPrime(512)
         while(p*q <255):
-            q = random.choice(primeArray)
+            # q = random.choice(primeArray)
+            q = getPrime(512)
         print("generated q :" , q)    
     n = p*q    
     print("want to insert e y/n")
