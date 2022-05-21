@@ -1,3 +1,4 @@
+from Crypto.Util.number import getPrime
 #reads data from text file
 def read_data(file_name):
     array = []
@@ -82,3 +83,11 @@ def isPrime(n):
         if n % i == 0:
             return False
     return True
+
+#generate two random primes each of length n bits
+def generate_two_prime_numbers(  nBits ):
+    p = getPrime(nBits )
+    q = getPrime(nBits )
+    while p == q:
+        q = getPrime(nBits)
+    return (p,q)    

@@ -2,7 +2,7 @@ import random
 # import utils
 from utils import *
 from math import ceil
-from Crypto.Util.number import getPrime
+
 
 def Encrypt(message, n, e):
     cipher = ""
@@ -38,10 +38,3 @@ def RSA_key_generator(p,q):
     d = InverseModulo(e,phi)
     return (e,d,n)        
 
-#generate two random integers from the array of prime numbers
-def generate_two_prime_numbers(  nBits ):
-    p = getPrime(nBits )
-    q = getPrime(nBits )
-    while p == q:
-        q = getPrime(nBits)
-    return (p,q)

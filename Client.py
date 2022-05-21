@@ -1,4 +1,3 @@
-from http import client
 import socket
 import pickle
 import Algorithms
@@ -25,10 +24,11 @@ if(mode == "1"):
     while(True):
         if(keySize < 0)     : print('key size cant be negative')
         elif(keySize < 30)  : print('please insert bigger key size')
-        elif(keySize > 1500)  : print('max key size = 1500')
+        elif(keySize > 1500)  : print('max key size = 1500')  #account for maximum recursion depth in python (could be easily increased but is not needed)
         else :     break
         keySize = int(input("Enter Key Size: ")) 
-    (p,q) = Algorithms.generate_two_prime_numbers( keySize // 2)
+    #(p,q) = generate_two_prime_numbers(512) #just if neccesary unccoment this line
+    (p,q) = generate_two_prime_numbers( keySize // 2)
     (e,d,n) = Algorithms.RSA_key_generator(p,q)
 else:
     p = int(input("Enter p: "))
@@ -46,10 +46,8 @@ else:
             print("q must be PRIME and p*q must be greater than 255!")
             q = int(input("Enter q: "))
     else:
-        # q = random.choice(primeArray)
         q = getPrime(512)
         while(p*q <255):
-            # q = random.choice(primeArray)
             q = getPrime(512)
         print("generated q :" , q)    
     n = p*q    
